@@ -9,7 +9,12 @@ readme = "README.md"
 python = "^3.12"
 fastapi = "^0.115.3"
 uvicorn = "^0.32.0"
+ipykernel = "^6.29.5"
+httpie = "^3.2.3"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]
