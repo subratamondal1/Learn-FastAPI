@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
@@ -13,11 +14,20 @@ class Base(DeclarativeBase):
 
 
 # Define the User model with columns id, name, and email
-class User(Base):
+class SQLAlchemyUser(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     email: Mapped[str]
+
+
+class PydanticUser(BaseModel):
+    id: int
+    name: str
+    email: str
+
+    class Config:
+        from_attributes = True
 
 
 # Database connection string for SQLite database

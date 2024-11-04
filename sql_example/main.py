@@ -1,8 +1,9 @@
 from typing import Any, Generator, List
 
-from database import SessionLocal, User
 from fastapi import Depends, FastAPI
 from sqlalchemy.orm.session import Session
+
+from .database import PydanticUser, SessionLocal, SQLAlchemyUser
 
 """
 This module sets up a FastAPI application with a single endpoint to read users from a database.
@@ -21,8 +22,10 @@ def get_db() -> Generator[Session, Any, None]:
     db: Session = SessionLocal()
     try:
         yield db
+        print("Database session created...")
     finally:
         db.close()
+        print("Database session closed...")
 
 
 # Create an instance of the FastAPI application
@@ -30,13 +33,19 @@ app: FastAPI = FastAPI()
 
 
 # Endpoint to read all users from the database
-@app.get(path="/users/")
-def read_users(db: Session = Depends(dependency=get_db)) -> List[User]:
+@app.get(path="/users/", response_model=List[PydanticUser])
+def read_users(db: Session = Depends(dependency=get_db)) -> List[SQLAlchemyUser]:
     """
     Endpoint to read all users from the database.
 
     Returns:
         List[User]: List of all users in the database.
     """
-    users: List[User] = db.query(_entity=User).all()
+    users: List[SQLAlchemyUser] = db.query(SQLAlchemyUser).all()
     return users
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app=app, host="127.0.0.1", port=8000, reload=True)
