@@ -11,7 +11,7 @@ fastapi = "^0.115.3"
 uvicorn = "^0.32.0"
 ipykernel = "^6.29.5"
 httpie = "^3.2.3"
-sqlalchemy = "^2.0.36"
+sqlalchemy = {extras = ["asyncio", "mypy"], version = "^2.0.36"}
 pydantic = "^2.9.2"
 
 
