@@ -13,8 +13,8 @@ ipykernel = "^6.29.5"
 httpie = "^3.2.3"
 sqlalchemy = {extras = ["asyncio", "mypy"], version = "^2.0.36"}
 pydantic = "^2.9.2"
-pymongo-stubs = "^0.2.0"
-
+pymongo = {extras = ["srv"], version = "^4.10.1"}
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
