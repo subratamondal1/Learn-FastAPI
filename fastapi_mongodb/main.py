@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.get(path="/")
 async def get_all_todos():
-    data = collection.find()
+    data = collection.find({"is_deleted": False})
     return all_tasks(todos=data)
 
 
@@ -41,6 +41,23 @@ async def update_task(task_id: str, updated_task: Todo):
             filter={"_id": id}, update={"$set": dict(updated_task)}
         )
         return {"status_code": 200, "message": "Task Updated Successfully"}
+    except Exception as e:
+        return HTTPException(status_code=404, detail=f"Error: {e}")
+
+
+@router.delete(path="/{task_id}")
+async def delete_task(task_id: str):
+    try:
+        id = ObjectId(oid=task_id)
+        existing_doc = collection.find_one(filter={"_id": id, "is_deleted": False})
+        if not existing_doc:
+            return HTTPException(
+                status_code=404, detail="Invalid Task Id:{id}, it does not exist"
+            )
+        res = collection.update_one(
+            filter={"_id": id}, update={"$set": {"is_deleted": True}}
+        )
+        return {"status_code": 200, "message": "Task Deleted Successfully"}
     except Exception as e:
         return HTTPException(status_code=404, detail=f"Error: {e}")
 
